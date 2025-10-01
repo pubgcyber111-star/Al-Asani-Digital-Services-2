@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Al-Asani for Digital Services</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts (Tajawal) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'tajawal': ['Tajawal', 'sans-serif'],
+          },
+        }
+      }
+    }
+    </script>
+    
+    <style>
+        /* Custom Global Styles */
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .font-tajawal { 
+          font-family: 'Tajawal', sans-serif; 
+        }
+        .scrollbar-hide::-webkit-scrollbar { 
+          display: none; 
+        }
+        .scrollbar-hide { 
+          -ms-overflow-style: none; 
+          scrollbar-width: none; 
+        }
+
+        /* Content Protection */
+        .protection-active {
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+        }
+        .protection-active img {
+          pointer-events: none;
+        }
+
+        /* Watermark Overlay */
+        .watermark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+        .watermark-item {
+            flex-shrink: 0;
+            width: 300px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: rgba(128, 128, 128, 0.08);
+            transform: rotate(-30deg);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Admin Panel Toggle Switch */
+        .toggle-checkbox:checked + .toggle-bg {
+          background-color: #3482b5;
+        }
+        .toggle-checkbox:checked ~ .dot {
+          transform: translateX(1.5rem);
+        }
+        .toggle-bg, .dot {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+
+
+        /* Icon Drop-in Animation */
+        @keyframes drop-in {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        .animate-drop-in {
+          animation: drop-in 0.4s ease-out forwards;
+          opacity: 0; /* Start hidden */
+        }
+
+        /* Welcome Modal */
+        .welcome-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.6);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+        }
+        .welcome-modal-overlay.visible {
+          opacity: 1;
+        }
+        .welcome-modal-content {
+          background: white;
+          padding: 2rem 2.5rem;
+          border-radius: 12px;
+          text-align: center;
+          max-width: 500px;
+          width: 90%;
+          transform: scale(0.9) translateY(20px);
+          opacity: 0;
+          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-in-out;
+        }
+        .welcome-modal-content.visible {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+        
+        /* Toast Animation for Content Protector */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(10px); }
+        }
+
+        /* AI Generator fade-in */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
+        }
+
+        /* Service Card Scroll Animation */
+        .service-card-animate {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .service-card-animate.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Service Page Image Scroll Animation */
+        .service-page-image-container {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease-out;
+            transform-origin: center center;
+            /* Start scaled down and slightly transparent */
+            transform: scale(0.85);
+            opacity: 0.7;
+        }
+        .service-page-image-container.is-scrolled {
+            /* Become full size when scrolled */
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* For Image Zoom */
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
+
+        /* AI Assistant Styles */
+        .ai-chat-container.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .ai-chat-container.closed {
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .ai-fab.open {
+            transform: scale(0.9) rotate(90deg);
+        }
+        .ai-message-user {
+            background-color: #3482b5;
+            color: white;
+        }
+        .ai-message-model {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .live-typing-indicator {
+            display: flex;
+            align-items: flex-end; /* Align to bottom for bounce effect */
+            gap: 6px;
+        }
+        .live-typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: #6699CC; /* Base color */
+            border-radius: 50%;
+            animation: bounceEffect 1.4s ease-in-out infinite;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .live-typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .live-typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounceEffect {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                background-color: #6699CC;
+            }
+            30% {
+                transform: translateY(-6px);
+                background-color: #88CCFF; /* Glow color */
+            }
+        }
+
+        /* AI FAB "Living" Animation */
+        .ai-fab-robot-container {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ai-fab-eye {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+            transition: transform 0.5s ease;
+        }
+
+        @keyframes fab-subtle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .animate-subtle-bounce .ai-fab-robot-container {
+            animation: fab-subtle-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes fab-look-right {
+            to { transform: rotate(15deg) translateX(4px); }
+        }
+        .animate-look-right .ai-fab-robot-container {
+            animation: fab-look-right 1.5s ease-in-out forwards;
+        }
+        .animate-look-right .ai-fab-eye {
+            transform: translate(-1px, -55%);
+        }
+
+        @keyframes fab-look-right-return {
+            from { transform: rotate(15deg) translateX(4px); }
+            to { transform: rotate(0deg) translateX(0); }
+        }
+        .animate-look-right-return .ai-fab-robot-container {
+            animation: fab-look-right-return 1.5s ease-in-out forwards;
+        }
+        .animate-look-right-return .ai-fab-eye {
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fab-look-left {
+            to { transform: rotate(-15deg) translateX(-4px); }
+        }
+        .animate-look-left .ai-fab-robot-container {
+            animation: fab-look-left 1.5s ease-in-out forwards;
+        }
+        .animate-look-left .ai-fab-eye {
+            transform: translate(-90%, -55%);
+        }
+
+        @keyframes fab-look-left-return {
+            from { transform: rotate(-15deg) translateX(-4px); }
+            to { transform: rotate(0deg) translateX(0); }
+        }
+        .animate-look-left-return .ai-fab-robot-container {
+            animation: fab-look-left-return 1.5s ease-in-out forwards;
+        }
+        .animate-look-left-return .ai-fab-eye {
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fab-blink-eye {
+            0%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+            50% { transform: translate(-50%, -50%) scaleY(0.1); }
+        }
+        .animate-blink .ai-fab-eye {
+            animation: fab-blink-eye 0.5s ease-in-out forwards;
+        }
+        
+        /* Share Modal */
+        .share-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.6);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+        }
+        .share-modal-overlay.visible {
+          opacity: 1;
+        }
+        .share-modal-content {
+          position: relative;
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          max-width: 550px;
+          width: 90%;
+          transform: scale(0.9) translateY(20px);
+          opacity: 0;
+          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-in-out;
+        }
+        .share-modal-content.visible {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <div id="root"></div>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.1.1/",
+        "react": "https://aistudiocdn.com/react@^19.1.1",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^0.14.0"
+      }
+    }
+    </script>
+    <!-- Babel for in-browser JSX/TSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
